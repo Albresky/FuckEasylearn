@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         百度题库去除答案遮挡
 // @namespace    http://tampermonkey.net/
-// @version      0.1.7
+// @version      0.1.8
 // @description  去除【百度题库】页面“查看答案”中对“查看答案与解析”的遮挡，去除会员广告，支持隐藏[视频讲解]|[试卷来源]等板块
 // @author       Albresky
 // @license      GPL v3
@@ -20,6 +20,7 @@
 
   const maskClass = ".mask";
   const tiganClass = ".tigan";
+  const answerClass=".analysis-text";
   const adScrollClass = ".vip-banner-cont";
   const checkInterval = 100; // ms
 
@@ -97,15 +98,17 @@
     let t = setInterval(function () {
       let mask = document.querySelectorAll(maskClass);
       let tigan = document.querySelector(tiganClass);
+      let answer = document.querySelector(answerClass);
       getAdContent();
-      if (tigan && mask) {
-        log("show full tigan");
-        tigan.classList.add("tigan-auto");
+      if (answer&&tigan && mask) {
         log("mask found");
         for (let m of mask) {
           log(m.className + " removed.");
           m.remove();
         }
+        log("show full tigan and answer");
+        tigan.classList.add("tigan-auto");
+        answer.classList.add("text-auto");
         rmVipContent();
         clearInterval(t);
       }
